@@ -1,8 +1,8 @@
-# Contribuir
+# Contributing
 
-Abre una incidencia antes de cambios grandes. Mantén separadas la lógica de descarga, transformación y presentación; añade pruebas para cada corrección. No incluyas en commits cachés, packs generados ni información personal.
+Open an issue before making substantial changes. Keep download, transformation, and rendering logic separate, and add tests for every fix. Do not commit caches, generated packs, or personal information.
 
-Antes de proponer cambios ejecuta:
+Before proposing changes, run:
 
 ```bash
 python -m pytest
@@ -12,5 +12,5 @@ lastlight --knowledge packs/aifa-medicinali-it.zip --validate-pack
 lastlight --knowledge packs/official-medicines-es-it.zip --validate-pack
 ```
 
-Los cambios que alteren el muestreo o el texto generado deben explicar su impacto en la reproducibilidad y en las métricas del benchmark.
+Changes that affect sampling or generated text must explain their impact on reproducibility and benchmark metrics.
 
