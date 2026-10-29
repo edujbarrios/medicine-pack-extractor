@@ -2,7 +2,7 @@
 
 ## Objetivo
 
-Construir un corpus español, auditable y reproducible de fichas técnicas que LastLight pueda montar como Knowledge Pack v1 y que `lastlight-bench` pueda evaluar sin adaptadores especiales.
+Construir un corpus español, auditable y reproducible de fichas técnicas que LastLight pueda montar como Knowledge Pack v1.
 
 ## Fuente y selección
 
@@ -25,20 +25,14 @@ es/<categoria>/<nregistro>-<nombre-normalizado>.md
 
 El manifiesto usa `format_version: 1`, idioma `es`, versión de contenido y una entrada de procedencia con URL y SHA-256 por documento. El ZIP sitúa el manifiesto en su raíz, tal como requiere LastLight.
 
-## Casos de benchmark
+## Separación del benchmark
 
-`data/processed/eval.jsonl` sigue el esquema observado en `lastlight-bench`:
-
-```json
-{"id":"...","query":"...","language":"es","category":"...","answerable":true,"expected_path":"es/...md","difficulty":"easy","tags":["cima","n02","ficha-tecnica"]}
-```
-
-Se crean hasta dos consultas por ficha: una por nombre y otra por principio activo/número de registro. Son casos de humo (`easy`) para verificar integración y ranking, no una evaluación clínica completa.
+Este proyecto solo produce el corpus y su pack. No contiene ni genera preguntas, etiquetas de relevancia o casos JSONL. Esos artefactos se crearán y versionarán posteriormente en `lastlight-bench`, manteniendo separadas la construcción del conocimiento y su evaluación.
 
 ## Limitaciones
 
 - El orden del API puede cambiar y, por tanto, también la muestra si se elimina la caché.
-- El prefijo ATC agrupa medicamentos heterogéneos; no es una taxonomía diseñada para este benchmark.
+- El prefijo ATC agrupa medicamentos heterogéneos y no constituye por sí solo una evaluación de recuperación.
 - El corpus puede quedar desactualizado respecto a CIMA.
 - La ficha técnica informa sobre medicamentos, pero su recuperación automática no equivale a consejo seguro para un paciente.
 - Un benchmark robusto necesita negativos plausibles, paráfrasis difíciles, control de fugas léxicas y revisión humana especializada.

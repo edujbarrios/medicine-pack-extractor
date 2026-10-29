@@ -26,7 +26,6 @@ def build_project(root: Path, config_path: Path | None = None) -> dict:
         shutil.rmtree(pack)
     pack.mkdir(parents=True)
     provenance: list[dict] = []
-    cases: list[dict] = []
     summary: dict[str, int] = {}
 
     for category in config["categories"]:
@@ -60,7 +59,6 @@ def build_project(root: Path, config_path: Path | None = None) -> dict:
                     "retrieved_at": date.today().isoformat(),
                     "sha256": hashlib.sha256(rendered.encode()).hexdigest(),
                 })
-                cases.extend(_benchmark_cases(detail, rel.as_posix(), category))
                 if len(selected) >= target_count:
                     break
             page += 1
@@ -82,27 +80,11 @@ def build_project(root: Path, config_path: Path | None = None) -> dict:
         "provenance": provenance,
     }
     (pack / "lastlight-pack.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    dataset = root / "data" / "processed" / "eval.jsonl"
-    dataset.write_text("".join(json.dumps(case, ensure_ascii=False) + "\n" for case in cases), encoding="utf-8")
     archive = root / "packs" / "cima-medicamentos-es.zip"
     archive.parent.mkdir(exist_ok=True)
     with zipfile.ZipFile(archive, "w", compression=zipfile.ZIP_DEFLATED) as zf:
         for path in sorted(pack.rglob("*")):
             if path.is_file():
                 zf.write(path, path.relative_to(pack).as_posix())
-    return {"pack": str(pack), "archive": str(archive), "dataset": str(dataset), "categories": summary, "cases": len(cases)}
-
-
-def _benchmark_cases(medicine: dict, path: str, category: dict) -> list[dict]:
-    registration = str(medicine.get("nregistro", ""))
-    name = str(medicine.get("nombre", registration))
-    active = str(medicine.get("pactivos", "")).strip()
-    base = f"cima-{category['slug']}-{registration}"
-    queries = [f"¿Cuál es la información de la ficha técnica de {name}?"]
-    if active:
-        queries.append(f"¿Qué medicamento de la muestra contiene {active} y tiene el registro {registration}?")
-    return [{
-        "id": f"{base}-{index}", "query": query, "language": "es", "category": category["slug"],
-        "answerable": True, "expected_path": path, "difficulty": "easy", "tags": ["cima", category["atc"].lower(), "ficha-tecnica"],
-    } for index, query in enumerate(queries, 1)]
+    return {"pack": str(pack), "archive": str(archive), "categories": summary}
 
