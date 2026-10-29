@@ -1,72 +1,72 @@
 # Medicine Pack Extractor
 
-Proyecto reproducible en Python y Jupyter para convertir información oficial de medicamentos de España e Italia en knowledge packs compatibles con [LastLight](https://github.com/edujbarrios/lastlight).
+Reproducible Python and Jupyter project for converting official medicine information from Spain and Italy into knowledge packs compatible with [LastLight](https://github.com/edujbarrios/lastlight).
 
-Fuentes:
+Sources:
 
-- **España (`es`)**: fichas técnicas de [AEMPS/CIMA](https://cima.aemps.es/cima/publico/home.html).
-- **Italia (`it`)**: RCP y catálogo abierto de [AIFA Medicinali](https://medicinali.aifa.gov.it/it/).
+- **Spain (`es`)**: Summaries of Product Characteristics from [AEMPS/CIMA](https://cima.aemps.es/cima/publico/home.html).
+- **Italy (`it`)**: Riassunti delle Caratteristiche del Prodotto and the open [AIFA Medicinali](https://medicinali.aifa.gov.it/it/) catalogue.
 
-> **Aviso sanitario:** este repositorio sirve para investigación de recuperación de información. No ofrece consejo médico, no prescribe tratamientos y no sustituye los documentos oficiales vigentes ni el criterio de profesionales sanitarios.
+> **Medical disclaimer:** this repository is intended for information-retrieval research. It does not provide medical advice, prescribe treatment, or replace current official documents or professional clinical judgment.
 
-## Corpus comparable por idioma
+## Comparable corpora by language
 
-Cada país aporta 100 medicamentos: 10 documentos de cada una de las mismas 10 categorías ATC. Los medicamentos concretos pueden ser diferentes porque proceden de registros nacionales distintos.
+Each country contributes 100 medicines: 10 documents from each of the same 10 ATC categories. The specific medicines may differ because they come from separate national registries.
 
-| Categoría común | ATC | España | Italia |
+| Shared category | ATC | Spain | Italy |
 |---|---:|---:|---:|
-| Analgésicos / Analgesici | `N02` | 10 | 10 |
-| Antibacterianos / Antibatterici | `J01` | 10 | 10 |
-| Antidiabéticos / Farmaci usati nel diabete | `A10` | 10 | 10 |
-| Trastornos de la acidez / Disturbi correlati all'acidità | `A02` | 10 | 10 |
-| Antitrombóticos / Antitrombotici | `B01` | 10 | 10 |
-| Betabloqueantes / Beta-bloccanti | `C07` | 10 | 10 |
-| Corticosteroides sistémicos / Corticosteroidi sistemici | `H02` | 10 | 10 |
-| Antiinflamatorios / Antinfiammatori | `M01` | 10 | 10 |
-| Psicolépticos / Psicolettici | `N05` | 10 | 10 |
-| Enfermedades obstructivas respiratorias / Vie respiratorie | `R03` | 10 | 10 |
+| Analgesics | `N02` | 10 | 10 |
+| Antibacterials for systemic use | `J01` | 10 | 10 |
+| Medicines used in diabetes | `A10` | 10 | 10 |
+| Medicines for acid-related disorders | `A02` | 10 | 10 |
+| Antithrombotic agents | `B01` | 10 | 10 |
+| Beta blockers | `C07` | 10 | 10 |
+| Corticosteroids for systemic use | `H02` | 10 | 10 |
+| Anti-inflammatory and antirheumatic products | `M01` | 10 | 10 |
+| Psycholeptics | `N05` | 10 | 10 |
+| Medicines for obstructive airway diseases | `R03` | 10 | 10 |
 
-La selección se define una sola vez en [`config/categories.json`](config/categories.json), con nombres localizados en español e italiano.
+The selection is defined once in [`config/categories.json`](config/categories.json), with localized Spanish and Italian names.
 
-## Artefactos generados
+## Generated artifacts
 
-Una ejecución produce tres packs, todos con manifiesto, procedencia y SHA-256:
+One run produces three packs, each with a manifest, provenance records, and SHA-256 hashes:
 
 ```text
 packs/
-├── cima-medicines-es.zip          # 100 documentos, solo español
-├── aifa-medicinali-it.zip         # 100 documentos, solo italiano
-└── official-medicines-es-it.zip   # 200 documentos, corpus bilingüe
+├── cima-medicines-es.zip          # 100 documents, Spanish only
+├── aifa-medicinali-it.zip         # 100 documents, Italian only
+└── official-medicines-es-it.zip   # 200 documents, bilingual corpus
 ```
 
-El pack combinado queda organizado así:
+The combined pack is organized as follows:
 
 ```text
 official-medicines-es-it/
 ├── lastlight-pack.json
-├── es/<categoria>/*.md
-└── it/<categoria>/*.md
+├── es/<category>/*.md
+└── it/<category>/*.md
 ```
 
-Este repositorio no contiene preguntas, etiquetas de relevancia ni datasets de evaluación. Esos artefactos pertenecen a [lastlight-bench](https://github.com/edujbarrios/lastlight-bench).
+This repository does not contain benchmark questions, relevance labels, or evaluation datasets. Those artifacts belong in [lastlight-bench](https://github.com/edujbarrios/lastlight-bench).
 
-## Estructura del proyecto
+## Project structure
 
 ```text
-config/                         categorías ATC comunes y nombres localizados
-data/raw/cima/                  caché de respuestas CIMA (no versionada)
-data/raw/aifa/                  CSV y RCP de AIFA (no versionados)
-data/processed/                 packs expandidos (no versionados)
-docs/                           metodología y procedencia
-notebooks/                      flujo reproducible
-packs/                          ZIP finales (no versionados)
-src/medicine_pack_extractor/    clientes, transformación y CLI
-tests/                          pruebas unitarias y de contrato
+config/                         shared ATC categories and localized names
+data/raw/cima/                  CIMA response cache (not versioned)
+data/raw/aifa/                  AIFA CSV and RCP cache (not versioned)
+data/processed/                 expanded packs (not versioned)
+docs/                           methodology and provenance
+notebooks/                      reproducible workflow
+packs/                          final ZIP files (not versioned)
+src/medicine_pack_extractor/    clients, transformations, and CLI
+tests/                          unit and contract tests
 ```
 
-## Instalación
+## Installation
 
-Requiere Python 3.10 o posterior. Para la mejor extracción de los RCP italianos se recomienda tener `pdftotext` de Poppler disponible; si no está instalado se usa `pypdf` como alternativa.
+Python 3.10 or later is required. For the best extraction quality from Italian RCP files, Poppler's `pdftotext` is recommended. If it is unavailable, the extractor falls back to `pypdf`.
 
 ```bash
 python -m venv .venv
@@ -76,15 +76,15 @@ python -m pip install -e ".[dev]"
 jupyter lab
 ```
 
-Abre `notebooks/01_build_medicine_packs.ipynb` o usa la CLI:
+Open `notebooks/01_build_medicine_packs.ipynb` or use the CLI:
 
 ```bash
 medicine-pack-extractor --root .
 ```
 
-La primera ejecución descarga las fuentes públicas y las guarda en `data/raw`. Las ejecuciones posteriores reutilizan la caché.
+The first run downloads the public sources and stores them under `data/raw`. Later runs reuse the cache.
 
-## Probar con LastLight
+## Test with LastLight
 
 ```bash
 python -m pip install lastlight
@@ -101,22 +101,26 @@ result = engine.query("Quali informazioni contiene il RCP del medicinale?")
 print(result.passage if result.accepted else result.refusal_reason)
 ```
 
-## Reproducibilidad y licencias
+## Reproducibility and licensing
 
-- CIMA se consulta mediante su API pública y cada documento conserva la URL de su ficha técnica.
-- AIFA se consulta mediante su CSV abierto diario y los enlaces oficiales a los RCP.
-- AIFA publica sus open data bajo CC BY 4.0; se conserva atribución a la agencia y al documento fuente.
-- El código del extractor se distribuye bajo MPL-2.0. Esa licencia no sustituye las condiciones de las fuentes.
-- El contenido puede cambiar con el tiempo. Para publicar una versión estable conviene conservar la caché usada, fijar una versión del pack y registrar la fecha de corte.
+- CIMA is accessed through its public API, and each document retains the URL of its official technical sheet.
+- AIFA is accessed through its daily open CSV catalogue and official RCP links.
+- AIFA publishes its open data under CC BY 4.0; attribution to the agency and source document is preserved.
+- The extractor code is distributed under MPL-2.0. This license does not replace the source agencies' terms.
+- Source content changes over time. For a stable release, retain the source cache, assign a pack version, and record the cutoff date.
 
-## Desarrollo
+## Development
 
 ```bash
 python -m pytest
 ```
 
-Consulta [`docs/METHODOLOGY.md`](docs/METHODOLOGY.md) para ver el muestreo, la transformación de RCP/PDF y las limitaciones.
+See [`docs/METHODOLOGY.md`](docs/METHODOLOGY.md) for sampling details, RCP/PDF transformation, and limitations.
 
-## Licencia
+## Acknowledgments
 
-Código bajo Mozilla Public License 2.0. Los documentos generados mantienen atribución y enlaces a AEMPS/CIMA y AIFA.
+The Italian benchmark variant was proposed by **Carrots Studio** through the [Campanile project](https://github.com/Carrotstudiosoftwarehouse/campanile), an offline-first neighborhood information and mutual-aid platform designed to keep working when internet connectivity is unavailable.
+
+## License
+
+Code is licensed under the Mozilla Public License 2.0. Generated documents retain attribution and links to AEMPS/CIMA and AIFA.
