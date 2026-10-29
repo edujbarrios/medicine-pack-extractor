@@ -48,7 +48,11 @@ official-medicines-es-it/
 └── it/<category>/*.md
 ```
 
-This repository does not contain benchmark questions, relevance labels, or evaluation datasets. Those artifacts belong in [lastlight-bench](https://github.com/edujbarrios/lastlight-bench).
+## Relationship with lastlight-bench
+
+This repository provides the source corpus that will be used by [lastlight-bench](https://github.com/edujbarrios/lastlight-bench). Its scope is limited to extracting official medicine information, filtering it into comparable ATC categories, normalizing the source documents, and building LastLight knowledge packs.
+
+It does not contain benchmark questions, relevance labels, expected answers, evaluation metrics, or benchmark execution logic. Those artifacts and experiments belong exclusively in `lastlight-bench`, keeping corpus construction separate from evaluation.
 
 ## Project structure
 
