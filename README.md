@@ -6,13 +6,20 @@ Proyecto reproducible en Python y Jupyter para convertir fichas técnicas públi
 
 ## Muestra inicial
 
-La configuración incluida selecciona 100 medicamentos autorizados y comercializados, repartidos entre tres grupos ATC:
+La configuración incluida selecciona 100 medicamentos autorizados y comercializados, repartidos en 10 grupos ATC con 10 fichas por grupo:
 
 | Carpeta | Grupo | ATC | Fichas |
 |---|---|---:|---:|
-| `analgesicos` | Analgésicos | `N02` | 34 |
-| `antibacterianos` | Antibacterianos para uso sistémico | `J01` | 33 |
-| `antidiabeticos` | Medicamentos usados en diabetes | `A10` | 33 |
+| `analgesicos` | Analgésicos | `N02` | 10 |
+| `antibacterianos` | Antibacterianos para uso sistémico | `J01` | 10 |
+| `antidiabeticos` | Medicamentos usados en diabetes | `A10` | 10 |
+| `trastornos-acidez` | Trastornos relacionados con la acidez | `A02` | 10 |
+| `antitromboticos` | Agentes antitrombóticos | `B01` | 10 |
+| `betabloqueantes` | Agentes beta-bloqueantes | `C07` | 10 |
+| `corticosteroides-sistemicos` | Corticosteroides para uso sistémico | `H02` | 10 |
+| `antiinflamatorios` | Antiinflamatorios y antirreumáticos | `M01` | 10 |
+| `psicolepticos` | Psicolépticos | `N05` | 10 |
+| `enfermedades-obstructivas-respiratorias` | Enfermedades obstructivas respiratorias | `R03` | 10 |
 
 Los grupos y el tamaño se pueden cambiar en [`config/categories.json`](config/categories.json).
 

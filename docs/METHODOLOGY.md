@@ -6,7 +6,7 @@ Construir un corpus español, auditable y reproducible de fichas técnicas que L
 
 ## Fuente y selección
 
-La URL base oficial es `https://cima.aemps.es/cima/rest`. Para cada prefijo ATC configurado se consulta `medicamentos` con `comerc=1` y `autorizados=1`. Se recorren las páginas y los resultados en el orden que entrega CIMA hasta alcanzar el límite configurado de medicamentos con ficha técnica: 34 analgésicos, 33 antibacterianos y 33 antidiabéticos.
+La URL base oficial es `https://cima.aemps.es/cima/rest`. Para cada prefijo ATC configurado se consulta `medicamentos` con `comerc=1` y `autorizados=1`. Se recorren las páginas y los resultados en el orden que entrega CIMA hasta alcanzar 10 medicamentos con ficha técnica en cada uno de 10 grupos: `A02`, `A10`, `B01`, `C07`, `H02`, `J01`, `M01`, `N02`, `N05` y `R03`.
 
 Para cada número de registro se descargan:
 

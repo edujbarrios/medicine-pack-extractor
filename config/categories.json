@@ -1,9 +1,16 @@
 {
   "language": "es",
   "categories": [
-    {"slug": "analgesicos", "name": "Analgésicos", "atc": "N02", "limit": 34},
-    {"slug": "antibacterianos", "name": "Antibacterianos para uso sistémico", "atc": "J01", "limit": 33},
-    {"slug": "antidiabeticos", "name": "Medicamentos usados en diabetes", "atc": "A10", "limit": 33}
+    {"slug": "analgesicos", "name": "Analgésicos", "atc": "N02", "limit": 10},
+    {"slug": "antibacterianos", "name": "Antibacterianos para uso sistémico", "atc": "J01", "limit": 10},
+    {"slug": "antidiabeticos", "name": "Medicamentos usados en diabetes", "atc": "A10", "limit": 10},
+    {"slug": "trastornos-acidez", "name": "Medicamentos para trastornos relacionados con la acidez", "atc": "A02", "limit": 10},
+    {"slug": "antitromboticos", "name": "Agentes antitrombóticos", "atc": "B01", "limit": 10},
+    {"slug": "betabloqueantes", "name": "Agentes beta-bloqueantes", "atc": "C07", "limit": 10},
+    {"slug": "corticosteroides-sistemicos", "name": "Corticosteroides para uso sistémico", "atc": "H02", "limit": 10},
+    {"slug": "antiinflamatorios", "name": "Productos antiinflamatorios y antirreumáticos", "atc": "M01", "limit": 10},
+    {"slug": "psicolepticos", "name": "Psicolépticos", "atc": "N05", "limit": 10},
+    {"slug": "enfermedades-obstructivas-respiratorias", "name": "Medicamentos para enfermedades obstructivas de las vías respiratorias", "atc": "R03", "limit": 10}
   ]
 }
 
