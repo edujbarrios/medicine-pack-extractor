@@ -1,44 +1,72 @@
-# CIMA Extractor
+# Medicine Pack Extractor
 
-Proyecto reproducible en Python y Jupyter para convertir fichas técnicas públicas de medicamentos de [AEMPS/CIMA](https://cima.aemps.es/cima/publico/home.html) en un **Knowledge Pack Format v1** consumible por [LastLight](https://github.com/edujbarrios/lastlight).
+Proyecto reproducible en Python y Jupyter para convertir información oficial de medicamentos de España e Italia en knowledge packs compatibles con [LastLight](https://github.com/edujbarrios/lastlight).
 
-> **Aviso sanitario:** este repositorio sirve para investigación de recuperación de información. No ofrece consejo médico, no prescribe tratamientos y no sustituye la ficha técnica vigente ni el criterio de profesionales sanitarios. CIMA es la fuente de autoridad; cada documento generado conserva su URL de origen.
+Fuentes:
 
-## Muestra inicial
+- **España (`es`)**: fichas técnicas de [AEMPS/CIMA](https://cima.aemps.es/cima/publico/home.html).
+- **Italia (`it`)**: RCP y catálogo abierto de [AIFA Medicinali](https://medicinali.aifa.gov.it/it/).
 
-La configuración incluida selecciona 100 medicamentos autorizados y comercializados, repartidos en 10 grupos ATC con 10 fichas por grupo:
+> **Aviso sanitario:** este repositorio sirve para investigación de recuperación de información. No ofrece consejo médico, no prescribe tratamientos y no sustituye los documentos oficiales vigentes ni el criterio de profesionales sanitarios.
 
-| Carpeta | Grupo | ATC | Fichas |
-|---|---|---:|---:|
-| `analgesicos` | Analgésicos | `N02` | 10 |
-| `antibacterianos` | Antibacterianos para uso sistémico | `J01` | 10 |
-| `antidiabeticos` | Medicamentos usados en diabetes | `A10` | 10 |
-| `trastornos-acidez` | Trastornos relacionados con la acidez | `A02` | 10 |
-| `antitromboticos` | Agentes antitrombóticos | `B01` | 10 |
-| `betabloqueantes` | Agentes beta-bloqueantes | `C07` | 10 |
-| `corticosteroides-sistemicos` | Corticosteroides para uso sistémico | `H02` | 10 |
-| `antiinflamatorios` | Antiinflamatorios y antirreumáticos | `M01` | 10 |
-| `psicolepticos` | Psicolépticos | `N05` | 10 |
-| `enfermedades-obstructivas-respiratorias` | Enfermedades obstructivas respiratorias | `R03` | 10 |
+## Corpus comparable por idioma
 
-Los grupos y el tamaño se pueden cambiar en [`config/categories.json`](config/categories.json).
+Cada país aporta 100 medicamentos: 10 documentos de cada una de las mismas 10 categorías ATC. Los medicamentos concretos pueden ser diferentes porque proceden de registros nacionales distintos.
 
-## Estructura
+| Categoría común | ATC | España | Italia |
+|---|---:|---:|---:|
+| Analgésicos / Analgesici | `N02` | 10 | 10 |
+| Antibacterianos / Antibatterici | `J01` | 10 | 10 |
+| Antidiabéticos / Farmaci usati nel diabete | `A10` | 10 | 10 |
+| Trastornos de la acidez / Disturbi correlati all'acidità | `A02` | 10 | 10 |
+| Antitrombóticos / Antitrombotici | `B01` | 10 | 10 |
+| Betabloqueantes / Beta-bloccanti | `C07` | 10 | 10 |
+| Corticosteroides sistémicos / Corticosteroidi sistemici | `H02` | 10 | 10 |
+| Antiinflamatorios / Antinfiammatori | `M01` | 10 | 10 |
+| Psicolépticos / Psicolettici | `N05` | 10 | 10 |
+| Enfermedades obstructivas respiratorias / Vie respiratorie | `R03` | 10 | 10 |
+
+La selección se define una sola vez en [`config/categories.json`](config/categories.json), con nombres localizados en español e italiano.
+
+## Artefactos generados
+
+Una ejecución produce tres packs, todos con manifiesto, procedencia y SHA-256:
 
 ```text
-config/                 selección de categorías ATC
-data/raw/               caché de respuestas CIMA (no versionada)
-data/processed/         pack expandido (no versionado)
-docs/                   metodología y formato de salida
-notebooks/              flujo reproducible y explicación paso a paso
-packs/                  ZIP final (no versionado)
-src/cima_extractor/     cliente, transformación, render y CLI
-tests/                  pruebas unitarias y del contrato del pack
+packs/
+├── cima-medicines-es.zip          # 100 documentos, solo español
+├── aifa-medicinali-it.zip         # 100 documentos, solo italiano
+└── official-medicines-es-it.zip   # 200 documentos, corpus bilingüe
+```
+
+El pack combinado queda organizado así:
+
+```text
+official-medicines-es-it/
+├── lastlight-pack.json
+├── es/<categoria>/*.md
+└── it/<categoria>/*.md
+```
+
+Este repositorio no contiene preguntas, etiquetas de relevancia ni datasets de evaluación. Esos artefactos pertenecen a [lastlight-bench](https://github.com/edujbarrios/lastlight-bench).
+
+## Estructura del proyecto
+
+```text
+config/                         categorías ATC comunes y nombres localizados
+data/raw/cima/                  caché de respuestas CIMA (no versionada)
+data/raw/aifa/                  CSV y RCP de AIFA (no versionados)
+data/processed/                 packs expandidos (no versionados)
+docs/                           metodología y procedencia
+notebooks/                      flujo reproducible
+packs/                          ZIP finales (no versionados)
+src/medicine_pack_extractor/    clientes, transformación y CLI
+tests/                          pruebas unitarias y de contrato
 ```
 
 ## Instalación
 
-Requiere Python 3.10 o posterior. No hay dependencias de ejecución; Jupyter y pytest son extras de desarrollo.
+Requiere Python 3.10 o posterior. Para la mejor extracción de los RCP italianos se recomienda tener `pdftotext` de Poppler disponible; si no está instalado se usa `pypdf` como alternativa.
 
 ```bash
 python -m venv .venv
@@ -48,36 +76,38 @@ python -m pip install -e ".[dev]"
 jupyter lab
 ```
 
-Abre `notebooks/01_cima_to_lastlight.ipynb` y ejecuta todas las celdas, o usa la CLI:
+Abre `notebooks/01_build_medicine_packs.ipynb` o usa la CLI:
 
 ```bash
-cima-extractor --root .
+medicine-pack-extractor --root .
 ```
 
-La primera ejecución consulta la API pública y guarda una caché local en `data/raw/cima`. Las siguientes ejecuciones reutilizan esa caché. El resultado contiene:
-
-- `data/processed/cima-medicamentos-es/lastlight-pack.json`
-- `data/processed/cima-medicamentos-es/es/<categoria>/*.md`
-- `packs/cima-medicamentos-es.zip`
+La primera ejecución descarga las fuentes públicas y las guarda en `data/raw`. Las ejecuciones posteriores reutilizan la caché.
 
 ## Probar con LastLight
 
 ```bash
 python -m pip install lastlight
-python -c "from lastlight import LastLight; e=LastLight('packs/cima-medicamentos-es.zip', language='es'); print(e.query('¿Qué información hay sobre un analgésico de la muestra?'))"
-lastlight --knowledge packs/cima-medicamentos-es.zip --validate-pack
+lastlight --knowledge packs/cima-medicines-es.zip --validate-pack
+lastlight --knowledge packs/aifa-medicinali-it.zip --validate-pack
+lastlight --knowledge packs/official-medicines-es-it.zip --validate-pack
 ```
 
-Este repositorio no genera preguntas ni datasets de evaluación. El benchmark se diseñará y mantendrá por separado en [lastlight-bench](https://github.com/edujbarrios/lastlight-bench), usando el pack producido aquí como corpus.
+```python
+from lastlight import LastLight
 
-## Reproducibilidad y uso responsable
+engine = LastLight("packs/official-medicines-es-it.zip", strategy="bm25")
+result = engine.query("Quali informazioni contiene il RCP del medicinale?")
+print(result.passage if result.accepted else result.refusal_reason)
+```
 
-- La extracción usa únicamente endpoints públicos documentados de CIMA.
-- Cada Markdown incluye número de registro, metadatos y enlace a la ficha oficial.
-- El manifiesto guarda origen y SHA-256 de cada documento.
-- Los datos generados se excluyen de Git para evitar copias obsoletas y mantener el repositorio ligero.
-- CIMA cambia con el tiempo: antes de publicar un pack, revísalo y fija una versión/fecha de corte.
-- Revisa las condiciones y el aviso legal de AEMPS antes de redistribuir contenido generado. La licencia MPL-2.0 de este repositorio cubre el código, no concede derechos adicionales sobre los datos fuente.
+## Reproducibilidad y licencias
+
+- CIMA se consulta mediante su API pública y cada documento conserva la URL de su ficha técnica.
+- AIFA se consulta mediante su CSV abierto diario y los enlaces oficiales a los RCP.
+- AIFA publica sus open data bajo CC BY 4.0; se conserva atribución a la agencia y al documento fuente.
+- El código del extractor se distribuye bajo MPL-2.0. Esa licencia no sustituye las condiciones de las fuentes.
+- El contenido puede cambiar con el tiempo. Para publicar una versión estable conviene conservar la caché usada, fijar una versión del pack y registrar la fecha de corte.
 
 ## Desarrollo
 
@@ -85,9 +115,8 @@ Este repositorio no genera preguntas ni datasets de evaluación. El benchmark se
 python -m pytest
 ```
 
-Consulta [`docs/METHODOLOGY.md`](docs/METHODOLOGY.md) para conocer las decisiones de muestreo y el mapeo exacto a ambos proyectos.
+Consulta [`docs/METHODOLOGY.md`](docs/METHODOLOGY.md) para ver el muestreo, la transformación de RCP/PDF y las limitaciones.
 
 ## Licencia
 
-Código bajo Mozilla Public License 2.0. El contenido extraído conserva la atribución y las condiciones de su fuente AEMPS/CIMA.
-
+Código bajo Mozilla Public License 2.0. Los documentos generados mantienen atribución y enlaces a AEMPS/CIMA y AIFA.

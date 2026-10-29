@@ -8,7 +8,7 @@ from .pipeline import build_project
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Construye un knowledge pack de fichas técnicas CIMA")
+    parser = argparse.ArgumentParser(description="Construye knowledge packs de medicamentos CIMA y AIFA")
     parser.add_argument("--root", type=Path, default=Path.cwd())
     parser.add_argument("--config", type=Path)
     args = parser.parse_args()

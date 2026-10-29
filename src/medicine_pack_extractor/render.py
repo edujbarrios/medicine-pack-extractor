@@ -53,7 +53,7 @@ def render_medicine(medicine: dict, sections: list[dict], category: dict) -> str
         "tags:",
         "  - medicamentos",
         "  - cima",
-        f"  - {category.get('slug') or slugify(str(category['name']))}",
+        f"  - {category['slug']}",
         f"  - {str(category['atc']).lower()}",
         "priority: normal",
         "---", "",
@@ -61,7 +61,7 @@ def render_medicine(medicine: dict, sections: list[dict], category: dict) -> str
         "> Fuente oficial: AEMPS/CIMA. Documento para recuperación de información; no sustituye el criterio médico ni la ficha técnica vigente.", "",
         "## Identificación", "",
         f"- Número de registro: {registration}",
-        f"- Categoría de muestra: {category['name']} ({category['atc']})",
+        f"- Categoría de muestra: {category['names']['es']} ({category['atc']})",
         f"- Principios activos: {active or 'No indicado'}",
         f"- Clasificación ATC: {atcs or category['atc']}",
         f"- Laboratorio titular: {medicine.get('labtitular', 'No indicado')}",
@@ -75,5 +75,37 @@ def render_medicine(medicine: dict, sections: list[dict], category: dict) -> str
         content = html_to_text(section.get("contenido") or section.get("texto") or "")
         if content:
             lines.extend([f"## {number} {title}".strip(), "", content, ""])
+    return "\n".join(lines).rstrip() + "\n"
+
+
+def render_aifa_medicine(medicine: dict[str, str], rcp_text: str, category: dict) -> str:
+    name = medicine["DENOMINAZIONE"].strip()
+    code = medicine["COD_FARMACO"].strip()
+    source = medicine["LINK_RCP"].strip()
+    safe_title = name.replace("\n", " ").replace(":", " -")
+    lines = [
+        "---",
+        f"title: {safe_title}",
+        "language: it",
+        "tags:",
+        "  - medicinali",
+        "  - aifa",
+        f"  - {category['slug']}",
+        f"  - {category['atc'].lower()}",
+        "priority: normal",
+        "---", "",
+        f"# {name}", "",
+        "> Fonte ufficiale: AIFA. Documento per il recupero di informazioni; non sostituisce il parere medico né il RCP vigente.", "",
+        "## Identificazione", "",
+        f"- Codice farmaco: {code}",
+        f"- Categoria del campione: {category['names']['it']} ({category['atc']})",
+        f"- Codice ATC: {medicine['CODICE_ATC'].strip()}",
+        f"- Principio attivo: {medicine['PA_ASSOCIATI'].strip() or 'Non indicato'}",
+        f"- Titolare: {medicine['RAGIONE_SOCIALE'].strip()}",
+        f"- Forma farmaceutica: {medicine['FORMA'].strip()}",
+        f"- Fonte RCP: {source}", "",
+        "## Riassunto delle caratteristiche del prodotto", "",
+        rcp_text.strip(), "",
+    ]
     return "\n".join(lines).rstrip() + "\n"
 
