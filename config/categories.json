@@ -1,0 +1,10 @@
+{
+  "language": "es",
+  "per_category": 10,
+  "categories": [
+    {"slug": "analgesicos", "name": "Analgésicos", "atc": "N02"},
+    {"slug": "antibacterianos", "name": "Antibacterianos para uso sistémico", "atc": "J01"},
+    {"slug": "antidiabeticos", "name": "Medicamentos usados en diabetes", "atc": "A10"}
+  ]
+}
+
