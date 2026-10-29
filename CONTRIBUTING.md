@@ -6,8 +6,10 @@ Antes de proponer cambios ejecuta:
 
 ```bash
 python -m pytest
-cima-extractor --root .
-lastlight --knowledge packs/cima-medicamentos-es.zip --validate-pack
+medicine-pack-extractor --root .
+lastlight --knowledge packs/cima-medicines-es.zip --validate-pack
+lastlight --knowledge packs/aifa-medicinali-it.zip --validate-pack
+lastlight --knowledge packs/official-medicines-es-it.zip --validate-pack
 ```
 
 Los cambios que alteren el muestreo o el texto generado deben explicar su impacto en la reproducibilidad y en las métricas del benchmark.

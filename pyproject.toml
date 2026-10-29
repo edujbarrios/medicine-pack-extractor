@@ -3,19 +3,19 @@ requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "cima-extractor"
-version = "0.1.0"
-description = "Reproducible CIMA to LastLight knowledge-pack extractor"
+name = "medicine-pack-extractor"
+version = "0.2.0"
+description = "Reproducible AEMPS/CIMA and AIFA to LastLight knowledge-pack extractor"
 readme = "README.md"
 requires-python = ">=3.10"
 license = {text = "MPL-2.0"}
-dependencies = []
+dependencies = ["pypdf>=5"]
 
 [project.optional-dependencies]
 dev = ["jupyterlab>=4", "pytest>=8"]
 
 [project.scripts]
-cima-extractor = "cima_extractor.cli:main"
+medicine-pack-extractor = "medicine_pack_extractor.cli:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

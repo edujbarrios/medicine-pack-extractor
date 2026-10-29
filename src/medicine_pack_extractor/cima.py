@@ -10,7 +10,7 @@ from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 
 BASE_URL = "https://cima.aemps.es/cima/rest"
-USER_AGENT = "cima-extractor/0.1 (+https://github.com/edujbarrios)"
+USER_AGENT = "medicine-pack-extractor/0.2 (+https://github.com/edujbarrios)"
 
 
 class CimaError(RuntimeError):
