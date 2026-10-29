@@ -30,34 +30,42 @@ def build_project(root: Path, config_path: Path | None = None) -> dict:
     summary: dict[str, int] = {}
 
     for category in config["categories"]:
-        candidates = client.list_medicines(category["atc"])
+        target_count = int(category.get("limit", config.get("per_category", 10)))
         selected: list[dict] = []
-        for candidate in candidates:
-            registration = str(candidate.get("nregistro", ""))
-            if not registration:
-                continue
-            detail = client.medicine(registration)
-            sections = client.technical_sheet(registration)
-            if not sections:
-                continue
-            selected.append(detail)
-            rel = Path(config["language"]) / category["slug"] / f"{registration}-{slugify(str(detail.get('nombre', 'medicamento')))}.md"
-            target = pack / rel
-            target.parent.mkdir(parents=True, exist_ok=True)
-            rendered = render_medicine(detail, sections, category)
-            target.write_text(rendered, encoding="utf-8")
-            provenance.append({
-                "path": rel.as_posix(),
-                "source": f"https://cima.aemps.es/cima/dochtml/ft/{registration}/FichaTecnica.html",
-                "publisher": "Agencia Española de Medicamentos y Productos Sanitarios (AEMPS)",
-                "retrieved_at": date.today().isoformat(),
-                "sha256": hashlib.sha256(rendered.encode()).hexdigest(),
-            })
-            cases.extend(_benchmark_cases(detail, rel.as_posix(), category))
-            if len(selected) >= int(config["per_category"]):
+        seen: set[str] = set()
+        page = 1
+        while len(selected) < target_count:
+            candidates = client.list_medicines(category["atc"], page=page)
+            if not candidates:
                 break
+            for candidate in candidates:
+                registration = str(candidate.get("nregistro", ""))
+                if not registration or registration in seen:
+                    continue
+                seen.add(registration)
+                detail = client.medicine(registration)
+                sections = client.technical_sheet(registration)
+                if not sections:
+                    continue
+                selected.append(detail)
+                rel = Path(config["language"]) / category["slug"] / f"{registration}-{slugify(str(detail.get('nombre', 'medicamento')))}.md"
+                target = pack / rel
+                target.parent.mkdir(parents=True, exist_ok=True)
+                rendered = render_medicine(detail, sections, category)
+                target.write_text(rendered, encoding="utf-8")
+                provenance.append({
+                    "path": rel.as_posix(),
+                    "source": f"https://cima.aemps.es/cima/dochtml/ft/{registration}/FichaTecnica.html",
+                    "publisher": "Agencia Española de Medicamentos y Productos Sanitarios (AEMPS)",
+                    "retrieved_at": date.today().isoformat(),
+                    "sha256": hashlib.sha256(rendered.encode()).hexdigest(),
+                })
+                cases.extend(_benchmark_cases(detail, rel.as_posix(), category))
+                if len(selected) >= target_count:
+                    break
+            page += 1
         summary[category["slug"]] = len(selected)
-        if len(selected) < int(config["per_category"]):
+        if len(selected) < target_count:
             raise RuntimeError(f"Solo se encontraron {len(selected)} fichas utilizables para {category['slug']}")
 
     manifest = {

@@ -6,13 +6,13 @@ Proyecto reproducible en Python y Jupyter para convertir fichas técnicas públi
 
 ## Muestra inicial
 
-La configuración incluida selecciona determinísticamente 10 medicamentos autorizados y comercializados por cada grupo ATC:
+La configuración incluida selecciona 100 medicamentos autorizados y comercializados, repartidos entre tres grupos ATC:
 
 | Carpeta | Grupo | ATC | Fichas |
 |---|---|---:|---:|
-| `analgesicos` | Analgésicos | `N02` | 10 |
-| `antibacterianos` | Antibacterianos para uso sistémico | `J01` | 10 |
-| `antidiabeticos` | Medicamentos usados en diabetes | `A10` | 10 |
+| `analgesicos` | Analgésicos | `N02` | 34 |
+| `antibacterianos` | Antibacterianos para uso sistémico | `J01` | 33 |
+| `antidiabeticos` | Medicamentos usados en diabetes | `A10` | 33 |
 
 Los grupos y el tamaño se pueden cambiar en [`config/categories.json`](config/categories.json).
 

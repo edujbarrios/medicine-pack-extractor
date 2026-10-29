@@ -5,7 +5,7 @@ from pathlib import Path
 
 def test_config_has_unique_categories() -> None:
     config = json.loads(Path("config/categories.json").read_text(encoding="utf-8"))
-    assert config["per_category"] == 10
+    assert sum(item["limit"] for item in config["categories"]) == 100
     assert len({item["slug"] for item in config["categories"]}) == len(config["categories"])
 
 
