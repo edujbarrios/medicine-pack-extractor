@@ -4,8 +4,8 @@ Reproducible Python and Jupyter project for converting official medicine informa
 
 Sources:
 
-- **Spain (`es`)**: Summaries of Product Characteristics from [AEMPS/CIMA](https://cima.aemps.es/cima/publico/home.html).
-- **Italy (`it`)**: Riassunti delle Caratteristiche del Prodotto and the open [AIFA Medicinali](https://medicinali.aifa.gov.it/it/) catalogue.
+- **España (`es`)**: Fichas técnicas de medicamentos publicadas por [AEMPS/CIMA](https://cima.aemps.es/cima/publico/home.html).
+- **Italia (`it`)**: Riassunti delle Caratteristiche del Prodotto e catalogo aperto pubblicati da [AIFA Medicinali](https://medicinali.aifa.gov.it/it/).
 
 > **Medical disclaimer:** this repository is intended for information-retrieval research. It does not provide medical advice, prescribe treatment, or replace current official documents or professional clinical judgment.
 
